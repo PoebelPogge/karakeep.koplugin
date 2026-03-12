@@ -91,6 +91,7 @@ function KarakeepExporter:createBookmark(params)
         body = {
             type = 'text',
             title = params.title,
+            note = params.title,
             text = params.content,
         },
     })
@@ -112,12 +113,13 @@ function KarakeepExporter:createBookmark(params)
 end
 
 ---Update an existing bookmark in Karakeep
----@param params {id: string, content: string} The bookmark update data
+---@param params {id: string, content: string, title: string} The bookmark update data
 ---@return table|nil result The updated bookmark data if successful
 function KarakeepExporter:updateBookmark(params)
     local result, error = self.ui.karakeep_api:updateBookmark(params.id, {
         body = {
             type = 'text',
+            note = params.title,
             text = params.content,
         },
     })
@@ -159,6 +161,7 @@ function KarakeepExporter:export(book_notes)
                             logger.dbg("[KarakeepExporter] Updating existing highlight")
                             local result = self:updateBookmark({
                                 id = bookmark_data.id,
+                                title = highlight.text,
                                 content = markdown_content,
                             })
                             if result then
